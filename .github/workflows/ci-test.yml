@@ -31,6 +31,7 @@ jobs:
       matrix:
         hugo:
           - '0.132.2' # .Site.IsServer deprecation ERROR
+          - '0.139.4' # Latest Pin 2024-12-11
           - 'latest'
       fail-fast: true
 
