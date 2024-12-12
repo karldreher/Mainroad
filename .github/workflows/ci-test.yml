@@ -1,11 +1,6 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - "README.md"
   pull_request:
     paths-ignore:
       - "README.md"
