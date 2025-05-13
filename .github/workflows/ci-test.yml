@@ -39,7 +39,7 @@ jobs:
           - '0.132.2' # .Site.IsServer deprecation ERROR
           - '0.147.3'
           - 'latest'
-      fail-fast: true
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
