@@ -38,6 +38,7 @@ jobs:
           - '0.123.8' # https://github.com/gohugoio/hugo/issues/12080
           - '0.132.2' # .Site.IsServer deprecation ERROR
           - '0.147.3'
+          - '0.156.0' # removed .Site.Author, paginate config, and other deprecated APIs
           - 'latest'
       fail-fast: false
 
