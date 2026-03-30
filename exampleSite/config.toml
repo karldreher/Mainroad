@@ -1,7 +1,6 @@
 baseurl = "/"
 title = "Mainroad"
 languageCode = "en-us"
-paginate = "10" # Hugo < 0.156.0
 theme = "mainroad"
 disqusShortname = "" # Enable comments by entering your Disqus shortname
 googleAnalytics = "" # Enable Google Analytics by entering your tracking id
