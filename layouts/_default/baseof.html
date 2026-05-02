@@ -4,13 +4,17 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{{ block "title" . }}{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}{{ end }}</title>
+	<link rel="canonical" href="{{ .Permalink }}">
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
-	<meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Params.Description }}{{ end }}">
+	<meta name="description" content="{{ block "meta_description" . }}{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Params.Description }}{{ end }}{{ end }}">
 	{{- if .Site.Params.opengraph }}
 		{{ template "_internal/opengraph.html" . }}
+		{{- if templates.Exists "partials/head/og_image.html" }}
+			{{- partial "head/og_image.html" . }}
+		{{- end }}
 	{{- end }}
 	{{- if .Site.Params.schema }}
-		{{ template "_internal/schema.html" . }}
+		{{- partial "schema.html" . }}
 	{{- end }}
 	{{- if .Site.Params.twitter_cards }}
 		{{ template "_internal/twitter_cards.html" . }}
@@ -25,16 +29,31 @@
 	{{- end }}
 
 	{{ $style := resources.Get "css/style.css" | resources.ExecuteAsTemplate "css/style.css" . -}}
+	{{- if .Site.Params.asyncCSS }}
+	<link rel="preload" as="style" href="{{ $style.RelPermalink }}" onload="this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="{{ $style.RelPermalink }}"></noscript>
+	{{ range .Site.Params.customCSS -}}
+	<link rel="preload" as="style" href="{{ . | relURL }}" onload="this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="{{ . | relURL }}"></noscript>
+	{{- end }}
+	{{- else }}
 	<link rel="stylesheet" href="{{ $style.RelPermalink }}">
 	{{ range .Site.Params.customCSS -}}
 	<link rel="stylesheet" href="{{ . | relURL }}">
+	{{- end }}
 	{{- end }}
 
 	{{- with .OutputFormats.Get "rss" }}
 	{{ printf `<link rel="%s" type="%s" href="%s" title="%s">` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }}
 	{{- end }}
 
+	{{ block "favicon" . }}
+	{{- if os.FileExists "static/favicon.svg" }}
+	<link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+	{{- else }}
 	<link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
+	{{- end }}
+	{{ end }}
 	{{- $server := "" }}
 	{{- if gt (int (index (split hugo.Version ".") 1)) "120" }}
 		{{ $server = hugo.IsServer }}
